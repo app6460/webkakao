@@ -157,6 +157,14 @@ func (k *kakao) getAuth() authRes {
 	return auth
 }
 
+func (k *kakao) Cookies() []*http.Cookie {
+	return k.cookies
+}
+
+func (k *kakao) Referer() *url.URL {
+	return k.referer
+}
+
 func New(email, pass, serviceURL string) *kakao {
 	instance := kakao{}
 	instance.email = email
