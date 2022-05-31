@@ -27,6 +27,7 @@ type (
 		cookies     []*http.Cookie
 		csrf        string
 		cryptoToken string
+		keepLogin   bool
 		referer     *url.URL
 	}
 
@@ -121,6 +122,11 @@ func (k *kakao) getAuth() authRes {
 	pass := k.AESEncrypt(k.password, k.cryptoToken)
 
 	data := url.Values{}
+
+	if k.keepLogin {
+		data.Add("stay_signed_in", "true")
+	}
+
 	data.Add("k", "true")
 	data.Add("os", "web")
 	data.Add("lang", "ko")
@@ -165,11 +171,12 @@ func (k *kakao) Referer() *url.URL {
 	return k.referer
 }
 
-func New(email, pass, serviceURL string) *kakao {
+func New(email, pass, serviceURL string, keepLogin bool) *kakao {
 	instance := kakao{}
 	instance.email = email
 	instance.password = pass
 	instance.serviceURL = serviceURL
+	instance.keepLogin = keepLogin
 	return &instance
 }
 
